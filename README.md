@@ -99,6 +99,13 @@ Directory: /path/to
   - Providing useful variables (`require`, `exports`, `__filename`, etc.).
 - This mechanism is a fundamental part of Node.js.
 
-```
+
+# NODE PACKAGE MANAGER
+A package manager in Node.js is a tool that simplifies the process of managing, installing, updating, and removing packages (reusable code libraries) in a Node.js project. It also handles dependencies between these packages, ensuring that the project functions as expected.
+
+there are 2 ways for creating a package: 
+
+``` npm init ```
+``` nom init -y ```
 
 
