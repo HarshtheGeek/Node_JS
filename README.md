@@ -134,3 +134,14 @@ Resolving a path means turning a potentially unclear or incomplete file path int
 For example, if you have a path like "../folder/file.txt" (relative path), a resolve function will calculate and return the full path, such as "/home/user/folder/file.txt" (absolute path), based on the current working directory.
 
 
+### File System Module in Node.js
+
+In Node.js, the **File System (fs)** module provides tools for working with files and directories. It allows you to:
+
+- **Read** files or directories.
+- **Write** or **append** data to files.
+- **Delete**, **rename**, or **move** files and directories.
+- Perform operations **synchronously** or **asynchronously** (non-blocking).
+
+
+
