@@ -110,7 +110,27 @@ there are 2 ways for creating a package:
 ``` npm install ```
 ``` npm uninstall ```
 ``` npm update ```
-# NOTE: Loadash is one of the package 
+# NOTE: Loadash is one of the package which can be used in node js
 
+# PATH MODULE 
+The path module in node js could be defined as a built-in tool that helps you work with file and directory paths on your computer. It provides simple ways to:
+
+- Combine parts of a file path.
+- Get information like the file name or extension.
+- Convert between different path formats (e.g., Windows vs. Linux).
+- Navigate relative and absolute paths easily.
+
+  ### Path Module Methods (Definitions)
+
+- **`path.join`**: Combines multiple path segments into a single path, handling slashes automatically.  
+- **`path.dirname`**: Returns the directory portion of a given path.  
+- **`path.basename`**: Returns the last part (file or folder name) of a path.  
+- **`path.resolve`**: Converts a sequence of paths into an absolute path.  
+- **`path.normalize`**: Cleans up a path by resolving redundant slashes and relative segments like `..` and `.`.
+- 
+**Resolving a path**
+Resolving a path means turning a potentially unclear or incomplete file path into a full, clear, and absolute path. This is done to determine the exact location of a file or directory in the system.
+
+For example, if you have a path like "../folder/file.txt" (relative path), a resolve function will calculate and return the full path, such as "/home/user/folder/file.txt" (absolute path), based on the current working directory.
 
 
