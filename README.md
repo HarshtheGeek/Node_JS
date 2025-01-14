@@ -106,6 +106,11 @@ A package manager in Node.js is a tool that simplifies the process of managing, 
 there are 2 ways for creating a package: 
 
 ``` npm init ```
-``` nom init -y ```
+``` npm init -y ```
+``` npm install ```
+``` npm uninstall ```
+``` npm update ```
+# NOTE: Loadash is one of the package 
+
 
 
