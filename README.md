@@ -143,5 +143,4 @@ In Node.js, the **File System (fs)** module provides tools for working with file
 - **Delete**, **rename**, or **move** files and directories.
 - Perform operations **synchronously** or **asynchronously** (non-blocking).
 
-
-
+**fs**
