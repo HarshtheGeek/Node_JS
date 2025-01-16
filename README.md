@@ -143,4 +143,9 @@ In Node.js, the **File System (fs)** module provides tools for working with file
 - **Delete**, **rename**, or **move** files and directories.
 - Perform operations **synchronously** or **asynchronously** (non-blocking).
 
-**fs**
+# HTTP MODULES
+The HTTP module in Node.js is a built-in module that allows you to create and handle HTTP requests and responses. It is used to build web servers and handle data exchanged over the HTTP protocol.
+
+**Built-in Module:** No need to install it separately; it is included in Node.js by default.
+**Supports Both HTTP Requests and Responses:** You can create servers to handle incoming requests or make HTTP requests to other servers.
+**Event-Driven:** The module operates asynchronously, allowing high-performance handling of multiple requests.
