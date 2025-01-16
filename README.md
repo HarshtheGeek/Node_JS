@@ -238,7 +238,11 @@ The **payload** is the part of a transmission that carries the meaningful conten
 Routing using the HTTP module in Node.js refers to the process of defining how a web server responds to different HTTP requests (e.g., GET, POST) at various endpoints (URLs or paths). It involves determining what logic or actions to execute when a specific request is made to the server.
 
 example 
-```
+# Demo Code for Routing with HTTP Module in Node.js
+
+This code demonstrates basic routing using the built-in `http` module in Node.js.
+
+```javascript
 // Import the HTTP module to create a server
 const http = require('http');
 
@@ -273,7 +277,6 @@ server.listen(port, () => {
     console.log("Server is now listening");
 });
 
-```
 
 
 
