@@ -234,5 +234,46 @@ The **payload** is the part of a transmission that carries the meaningful conten
 - **Headers**: Provide metadata about the request or response (e.g., content type, authentication tokens, etc.).
 - **Payload**: Contains the actual data (e.g., a user’s information in a JSON format).
 
+# Routes using HTTP request
+Routing using the HTTP module in Node.js refers to the process of defining how a web server responds to different HTTP requests (e.g., GET, POST) at various endpoints (URLs or paths). It involves determining what logic or actions to execute when a specific request is made to the server.
+
+example 
+```
+// Import the HTTP module to create a server
+const http = require('http');
+
+// Create the HTTP server
+const server = http.createServer((req, res) => {
+    // Get the requested URL from the incoming request object
+    const url = req.url;
+
+    // Check the URL and respond accordingly
+    if (url === "/") {
+        // Home route: Respond with a 200 status and plain text message
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end("If you are seeing this that means you are on the home page");
+    } 
+    else if (url === "/projects") {
+        // Projects route: Respond with a 200 status and plain text message
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end("Dusre page pe aa gaye bc"); // Informative message for projects route
+    } 
+    else {
+        // Fallback for undefined routes: Respond with a 404 status and error message
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end("Page not found chud gaye guru"); // Error message for undefined routes
+    }
+});
+
+// Define the port on which the server will listen
+const port = 3000;
+
+// Start the server and log a message indicating it is running
+server.listen(port, () => {
+    console.log("Server is now listening");
+});
+
+```
+
 
 
