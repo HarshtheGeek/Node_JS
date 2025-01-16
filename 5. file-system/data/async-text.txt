@@ -1,1 +1,2 @@
 This is the async method to write a file
+ this is the other line added in the already existing file

@@ -42,6 +42,10 @@ fs.writeFile(asyncFilepath,"This is the async method to write a file",(err)=>{
 fs.readFile(asyncFilepath, 'utf8', (err,data)=>{
     if(err) throw err;
     console.log("The content of the async file : ",data);
-})
 
+    fs.appendFile(asyncFilepath, "\n this is the other line added in the already existing file", (err)=>{
+        if (err) throw err;
+        console.log("The new line has been added");
+    })
+});
 
