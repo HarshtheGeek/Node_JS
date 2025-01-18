@@ -276,7 +276,86 @@ const port = 3000;
 server.listen(port, () => {
     console.log("Server is now listening");
 });
+```
 
+# Callback Function in JavaScript and Node.js
 
+A **callback function** is a function passed as an argument to another function and is executed after the completion of that function. It enables asynchronous programming by allowing operations to run without blocking the execution of subsequent code.
+
+---
+
+## Key Concepts of a Callback Function
+
+1. **Function as an Argument**:
+   - In JavaScript, functions are first-class citizens and can be passed as arguments to other functions.
+   - The callback is executed after the parent function completes its task.
+
+2. **Asynchronous Execution**:
+   - Callbacks are used in asynchronous operations like file reading, database querying, or API requests in Node.js.
+   - This ensures non-blocking behavior and efficient multitasking.
+
+3. **Named or Anonymous**:
+   - Callbacks can be either named functions or inline anonymous functions.
+
+---
+
+## Callback Function in JavaScript
+
+### Example: Synchronous Callback
+```javascript
+function greet(name, callback) {
+    console.log("Hello " + name);
+    callback();
+}
+
+function sayGoodbye() {
+    console.log("Goodbye!");
+}
+
+// Passing sayGoodbye as a callback
+greet("Alice", sayGoodbye);
+```
+
+**Output**:
+```
+Hello Alice
+Goodbye!
+```
+
+- The `sayGoodbye` function is passed as a callback to `greet`.
+- After `greet` logs "Hello Alice," it invokes the `callback()` function.
+
+---
+
+## Callback Function in Node.js
+
+Node.js makes extensive use of callbacks for handling asynchronous operations.
+
+### Example: Reading a File Asynchronously
+```javascript
+const fs = require('fs');
+
+// Asynchronous file read
+fs.readFile('example.txt', 'utf8', (err, data) => {
+    if (err) {
+        console.error("Error reading file:", err);
+        return;
+    }
+    console.log("File content:", data);
+});
+
+```
+
+- `fs.readFile` takes a callback function as its third argument.
+  - `err`: Represents any error that occurred during the operation.
+  - `data`: Contains the file content if the operation was successful.
+
+---
+
+# CallBack Hell
+
+Callback Hell refers to a situation in Node.js where multiple nested callback functions are used to handle asynchronous operations. This creates a pyramid-like structure in the code, making it difficult to read, debug, and maintain.
+
+This problem arises because Node.js heavily relies on callbacks for asynchronous operations like file handling, database queries, and API calls.
 
 
