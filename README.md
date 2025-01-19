@@ -359,3 +359,42 @@ Callback Hell refers to a situation in Node.js where multiple nested callback fu
 This problem arises because Node.js heavily relies on callbacks for asynchronous operations like file handling, database queries, and API calls.
 
 
+# PROMISES 
+A Promises in Node.js is a special JavaScript object used to handle asynchronous operations. It represents the eventual completion (or failure) of an asynchronous task and its resulting value. Promises help manage asynchronous code more effectively, avoiding Callback Hell and making code more readable and maintainable.
+
+# Creating a Promise
+A promise is created using the Promise constructor, which takes a callback function with two arguments: resolve and reject.
+
+```
+const myPromise = new Promise((resolve, reject) => {
+    let success = true; // Simulating a condition
+
+    if (success) {
+        resolve("Operation succeeded!");
+    } else {
+        reject("Operation failed!");
+    }
+});
+
+```
+# Using Promises
+Promises are consumed using `.then()`, `.catch()`, and `.finally()` methods:
+
+`.then()`: Handles the fulfillment of the promise and gets the resolved value.
+`.catch()`: Handles the rejection of the promise.
+`.finally()`: Executes a block of code after the promise is settled (either fulfilled or rejected).
+
+```
+myPromise
+    .then((value) => {
+        console.log(value); // Logs: "Operation succeeded!"
+    })
+    .catch((error) => {
+        console.error(error); // Logs: "Operation failed!" (if rejected)
+    })
+    .finally(() => {
+        console.log("Promise settled."); // Always executes
+    });
+
+```
+
