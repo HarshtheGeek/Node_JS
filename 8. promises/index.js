@@ -16,14 +16,6 @@ Delayfn(5000).then(() => console.log("The event has been delayed by 5 seconds"))
 // promises are asynchronous and do not block the main thread.
 console.log("The lecture has ended");
 
-
-
-
-
-
-
-
-
 // Using both resolve and reject
 
 function divideFn(num1,num2){
@@ -36,6 +28,4 @@ function divideFn(num1,num2){
     })
 }
 
-divideFn(100,50).
-then((result)=> console.log("The answer is",result)).
-catch((error)=> console.log("the error is", error))
+divideFn(100,50).then((result)=> console.log("The answer is",result)).catch((error)=> console.log("the error is", error))
