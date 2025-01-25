@@ -398,3 +398,101 @@ myPromise
 
 ```
 
+
+# EVENT EMITTER
+
+Here’s a set of EventEmitter notes written in GitHub-friendly Markdown format:
+
+---
+
+# EventEmitter in Node.js
+
+The **EventEmitter** class in Node.js allows for the implementation of the **Observer design pattern**, enabling objects to emit events and other objects to respond to those events.
+
+The `EventEmitter` class is part of Node.js's built-in `events` module. It provides an easy way to:
+- **Register listeners** for specific events.
+- **Emit events** to trigger those listeners.
+
+---
+
+## Features
+
+1. **Event Registration**: Add listeners for specific events.
+2. **Event Emission**: Emit events to notify listeners.
+3. **Event Removal**: Remove one or all listeners for a given event.
+4. **Multiple Listeners**: Support for multiple listeners on a single event.
+
+---
+
+## Common Methods
+
+| Method | Description |
+|--------|-------------|
+| `on(event, listener)` | Adds a listener for the specified event. |
+| `once(event, listener)` | Adds a listener that triggers only once. |
+| `emit(event, ...args)` | Emits the specified event, calling all its listeners. |
+| `removeListener(event, listener)` | Removes a specific listener from the event. |
+| `removeAllListeners(event)` | Removes all listeners for the specified event. |
+
+---
+
+## Basic Example
+
+Here’s a basic implementation of `EventEmitter`:
+
+```javascript
+const EventEmitter = require('events');
+
+// Create an EventEmitter instance
+const myEmitter = new EventEmitter();
+
+// Register a listener for the 'Greet' event
+myEmitter.on('Greet', (name) => {
+    console.log(`Hello, ${name}!`);
+});
+
+// Emit the 'Greet' event
+myEmitter.emit('Greet', 'Alice');
+```
+
+
+## Custom EventEmitter
+
+If you want to create a custom `EventEmitter`, you can extend the `EventEmitter` class:
+
+```javascript
+const EventEmitter = require('events');
+
+class CustomEmitter extends EventEmitter {
+    log(message) {
+        this.emit('log', message); // Emit a custom 'log' event
+    }
+}
+
+const myEmitter = new CustomEmitter();
+
+// Add a listener for the 'log' event
+myEmitter.on('log', (message) => {
+    console.log(`Log: ${message}`);
+});
+
+// Emit the 'log' event
+myEmitter.log('This is a custom event!');
+```
+
+### Output:
+```
+Log: This is a custom event!
+```
+
+---
+
+## Important Notes
+
+- Always **remove listeners** if they are no longer needed to prevent memory leaks.
+- Use `once` for listeners that only need to handle the first emission of an event.
+- Consider setting the maximum number of listeners (default is 10) using `setMaxListeners` to avoid warnings in case of many listeners.
+
+---
+
+
