@@ -24,6 +24,13 @@ every module is wrapped in a function before it is executed.
 # Wrapper Module in Node.js
 In Node.js, a **wrapper module** is a mechanism by which the runtime wraps user-defined JavaScript code into a function before executing it. This ensures encapsulation and provides access to essential module-related variables.
 
+Real life example - 
+When you go to a movie theater, every movie has its own screen and room. You can't see or hear the movie playing in another room — it's all separated.
+
+Node.js does the same thing for each file (called a module) — it puts your code into its own "room" (scope), so that variables or functions you write don’t mix with others.
+
+To do that, Node wraps your code inside a function before running it. This is called a wrapper.
+
 ## **How It Works**
 
 When a module is loaded, Node.js wraps the code in the following function:
@@ -110,6 +117,7 @@ there are 2 ways for creating a package:
 ``` npm install ```
 ``` npm uninstall ```
 ``` npm update ```
+
 # NOTE: Loadash is one of the package which can be used in node js
 
 # PATH MODULE 
