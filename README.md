@@ -503,7 +503,6 @@ Log: This is a custom event!
   
 ---
 
-```markdown
 # Node.js Module Exports – Developer Notes
 
 ## 1. What is `module.exports`?
