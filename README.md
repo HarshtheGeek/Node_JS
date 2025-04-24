@@ -500,7 +500,131 @@ Log: This is a custom event!
 - Always **remove listeners** if they are no longer needed to prevent memory leaks.
 - Use `once` for listeners that only need to handle the first emission of an event.
 - Consider setting the maximum number of listeners (default is 10) using `setMaxListeners` to avoid warnings in case of many listeners.
+  
+---
+
+```markdown
+# Node.js Module Exports – Developer Notes
+
+## 1. What is `module.exports`?
+
+In Node.js, each file is treated as a module. `module.exports` is used to **export functions, objects, or values** from one file so they can be **imported and reused** in another.
 
 ---
+
+## 2. Exporting a Single Function or Value
+
+### `math.js`
+```js
+function add(a, b) {
+  return a + b;
+}
+
+module.exports = add;
+```
+
+### `app.js`
+```js
+const add = require('./math');
+console.log(add(5, 3)); // Output: 8
+```
+
+---
+
+## 3. Exporting Multiple Values (Object Format)
+
+### `utils.js`
+```js
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
+
+module.exports = {
+  add,
+  subtract
+};
+```
+
+### `app.js`
+```js
+const { add, subtract } = require('./utils');
+
+console.log(add(10, 2));      // Output: 12
+console.log(subtract(10, 2)); // Output: 8
+```
+
+---
+
+## 4. Using `exports` Shortcut
+
+```js
+exports.sayHello = function(name) {
+  return `Hello, ${name}`;
+};
+```
+
+> **Note:** Use `exports` only when adding properties.  
+> Do **not** assign it directly.
+
+---
+
+## 5. Incorrect Usage (Avoid This)
+
+```js
+exports = function() {
+  return 'Incorrect';
+};
+```
+
+Use `module.exports` instead:
+
+```js
+module.exports = function() {
+  return 'Correct';
+};
+```
+
+---
+
+## 6. Exporting a Class
+
+```js
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+  greet() {
+    return `Hello, ${this.name}`;
+  }
+}
+
+module.exports = User;
+```
+
+### `app.js`
+```js
+const User = require('./User');
+
+const u = new User('Harsh');
+console.log(u.greet()); // Output: Hello, Harsh
+```
+
+---
+
+## 7. Summary
+
+| Export Type             | Syntax Example                         |
+|--------------------------|-----------------------------------------|
+| Single function          | `module.exports = add`                 |
+| Multiple functions       | `module.exports = { add, subtract }`   |
+| Using `exports` shortcut | `exports.funcName = function() {}`     |
+| Whole class              | `module.exports = class`               |
+
+---
+
 
 
