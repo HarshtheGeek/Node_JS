@@ -503,7 +503,7 @@ Log: This is a custom event!
   
 ---
 
-# Node.js Module Exports – Developer Notes
+# Node.js Module Exports
 
 ## 1. What is `module.exports`?
 
@@ -624,6 +624,9 @@ console.log(u.greet()); // Output: Hello, Harsh
 | Whole class              | `module.exports = class`               |
 
 ---
+
+**Template** - Blueprint
+**Instance** - Product created from that blueprint
 
 
 
