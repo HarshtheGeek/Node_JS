@@ -20,6 +20,7 @@ every module is wrapped in a function before it is executed.
 | **Usage**                   | Node.js              | Browsers & Node.js    |
 | **Compatibility**           | Node.js only         | Browser and Node.js   |
 
+**Note** : By default nodeJS treats JS code as CommonJS modules
 
 # Wrapper Module in Node.js
 In Node.js, a **wrapper module** is a mechanism by which the runtime wraps user-defined JavaScript code into a function before executing it. This ensures encapsulation and provides access to essential module-related variables.
