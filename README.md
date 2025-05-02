@@ -22,91 +22,125 @@ every module is wrapped in a function before it is executed.
 
 **Note** : By default nodeJS treats JS code as CommonJS modules
 
-# Wrapper Module in Node.js
-In Node.js, a **wrapper module** is a mechanism by which the runtime wraps user-defined JavaScript code into a function before executing it. This ensures encapsulation and provides access to essential module-related variables.
+---
 
-Real life example - 
-When you go to a movie theater, every movie has its own screen and room. You can't see or hear the movie playing in another room — it's all separated.
+# IIFE and Node.js Module Wrapper
 
-Node.js does the same thing for each file (called a module) — it puts your code into its own "room" (scope), so that variables or functions you write don’t mix with others.
+## IIFE (Immediately Invoked Function Expression)
 
-To do that, Node wraps your code inside a function before running it. This is called a wrapper.
+An **IIFE** is a JavaScript function that runs as soon as it is defined.
 
-## **How It Works**
+### Syntax
 
-When a module is loaded, Node.js wraps the code in the following function:
+```js
+(function () {
+    console.log("IIFE executed!");
+})();
+````
 
-```javascript
-(function (exports, require, module, __filename, __dirname) {
-    // Your module code goes here
-});
-```
+### Why Use It?
 
-For example, if you write:
-```javascript
-console.log("Hello, Node.js!");
-```
-
-Node.js internally transforms it into:
-```javascript
-(function (exports, require, module, __filename, __dirname) {
-    console.log("Hello, Node.js!");
-});
-```
-
-## **Why Wrapper Modules Are Used**
-
-1. **Encapsulation**:
-   - Ensures that variables and functions inside a module do not leak into the global scope.
-   - Each module has its own private scope.
-
-2. **Access to Module-Specific Variables**:
-   - `exports`: Shortcut for `module.exports` to export functionality.
-   - `require`: Function to import other modules.
-   - `module`: Object representing the current module.
-   - `__filename`: Absolute path of the module file.
-   - `__dirname`: Directory name of the module file.
-
-3. **Performance Optimization**:
-   - Modules are cached after their first execution to avoid reloading.
-
-4. **Compatibility**:
-   - Provides a consistent environment for all modules.
+* Encapsulates variables
+* Prevents global scope pollution
+* Useful for one-time setup logic
 
 ---
 
-## **Example**
+## Node.js Module Wrapper Function
 
-Consider this code in a file named `example.js`:
-```javascript
-console.log("Filename:", __filename);
-console.log("Directory:", __dirname);
-```
+In Node.js, every file is treated as a **module**, and Node wraps it in a function behind the scenes:
 
-Node.js wraps it like this:
-```javascript
+```js
 (function (exports, require, module, __filename, __dirname) {
-    console.log("Filename:", __filename);
-    console.log("Directory:", __dirname);
+    // Your module code here
 });
 ```
 
-When executed, the output will be:
+This provides **module-scoped variables** automatically.
+
+---
+
+# Module-Specific Variables in Node.js
+
+Node.js provides these five special variables to every module:
+
+### 1. `exports`
+
+A shorthand reference to `module.exports`, used to expose code from your module.
+
+```js
+exports.greet = () => console.log("Hello!");
 ```
-Filename: /path/to/example.js
-Directory: /path/to
+
+### 2. `module`
+
+Represents the **current module**, with information like `module.exports`, `module.id`, etc.
+
+```js
+console.log(module); // Info about the current module
+```
+
+> Note: You can overwrite `module.exports` entirely:
+
+```js
+module.exports = function() {
+    console.log("Exported function");
+};
+```
+
+### 3. `require`
+
+Used to import modules—built-in, third-party, or local.
+
+```js
+const fs = require('fs');
+```
+
+> It’s a function provided per module and is relative to the file.
+
+### 4. `__filename`
+
+The **absolute path** of the current module file.
+
+```js
+console.log(__filename);
+// /Users/harsh/projects/my-app/index.js
+```
+
+### 5. `__dirname`
+
+The **directory** name of the current module file.
+
+```js
+console.log(__dirname);
+// /Users/harsh/projects/my-app
 ```
 
 ---
 
-## **Key Points**
-- Wrapper modules are **invisible** to developers and operate behind the scenes.
-- They play a crucial role in:
-  - Isolating code in a module.
-  - Enabling modularity in Node.js applications.
-  - Providing useful variables (`require`, `exports`, `__filename`, etc.).
-- This mechanism is a fundamental part of Node.js.
+## IIFE vs Node Module Wrapper
 
+| Feature      | IIFE                      | Node.js Module Wrapper            |
+| ------------ | ------------------------- | --------------------------------- |
+| Defined by   | Developer                 | Node.js runtime                   |
+| Scope        | Local to the function     | Local to the module               |
+| Execution    | Immediate                 | Automatic by Node.js              |
+| Special Vars | None                      | Yes (exports, require, etc.)      |
+| Use Case     | Encapsulation, init logic | Modular structure, file isolation |
+
+---
+
+## Fun Fact
+
+You can inspect the wrapper in Node.js:
+
+```js
+console.log(arguments.callee.toString());
+```
+
+> `arguments.callee` is **deprecated** in strict mode.
+
+---
 
 # NODE PACKAGE MANAGER
 A package manager in Node.js is a tool that simplifies the process of managing, installing, updating, and removing packages (reusable code libraries) in a Node.js project. It also handles dependencies between these packages, ensuring that the project functions as expected.
