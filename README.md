@@ -314,15 +314,557 @@ Resolving a path means turning a potentially unclear or incomplete file path int
 
 For example, if you have a path like "../folder/file.txt" (relative path), a resolve function will calculate and return the full path, such as "/home/user/folder/file.txt" (absolute path), based on the current working directory.
 
+---
+Sure. Here's a **clear and detailed explanation of**:
 
-### File System Module in Node.js
+---
 
-In Node.js, the **File System (fs)** module provides tools for working with files and directories. It allows you to:
+## 1. **Blocking vs Non-Blocking in Node.js**
 
-- **Read** files or directories.
-- **Write** or **append** data to files.
-- **Delete**, **rename**, or **move** files and directories.
-- Perform operations **synchronously** or **asynchronously** (non-blocking).
+### 🔹 **Blocking**
+
+A **blocking** operation stops the execution of further code **until the current task completes**.
+
+* Synchronous methods in Node.js (like `fs.readFileSync()`) are **blocking**.
+* While a blocking operation is in progress, Node.js **cannot handle any other operations**, even if they are trivial.
+
+#### Example:
+
+```js
+const fs = require('fs');
+
+const data = fs.readFileSync('file.txt', 'utf8');
+console.log(data); // This will run ONLY AFTER the file is read
+
+console.log('Done'); // Waits until reading is complete
+```
+
+#### Output (order is preserved):
+
+```
+<file content>
+Done
+```
+
+### 🔹 **Non-Blocking**
+
+A **non-blocking** operation allows the program to continue executing **while the operation is being processed in the background**.
+
+* Asynchronous methods in Node.js (like `fs.readFile()`) are **non-blocking**.
+* Node uses **callback**, **Promises**, or **async/await** to handle these.
+
+#### Example:
+
+```js
+const fs = require('fs');
+
+fs.readFile('file.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log(data); // Will print later, after file is read
+});
+
+console.log('Done'); // Runs immediately
+```
+
+#### Output (order may differ):
+
+```
+Done
+<file content>
+```
+
+### Summary Table:
+
+| Operation Type | Method Example      | Blocks Event Loop | Performance Impact   |
+| -------------- | ------------------- | ----------------- | -------------------- |
+| Blocking       | `fs.readFileSync()` | Yes               | Slower for I/O apps  |
+| Non-blocking   | `fs.readFile()`     | No                | Preferred in Node.js |
+
+---
+
+# Node.js `fs` Module 
+
+The `fs` module in Node.js provides an API for interacting with the file system in a way that is closely modeled around standard POSIX functions. It allows reading, writing, updating, deleting, and watching files and directories.
+
+## Importing the fs Module
+
+```js
+const fs = require('fs');
+```
+
+For promise-based operations (introduced in Node.js 10+):
+
+```js
+const fs = require('fs/promises');
+```
+
+---
+
+## Modes of Operation
+
+Every method has:
+
+* **Asynchronous version** (non-blocking)
+* **Synchronous version** (blocking)
+* **Promise-based version** (using `fs/promises`)
+
+---
+
+## 1. **File Operations**
+
+### `fs.readFile(path, options, callback)`
+
+Reads the entire contents of a file.
+
+```js
+fs.readFile('file.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+```
+
+* Sync: `fs.readFileSync(path, options)`
+* Promise: `fs.promises.readFile(path, options)`
+
+---
+
+### `fs.writeFile(file, data, options, callback)`
+
+Writes data to a file. Creates file if not exists or replaces content.
+
+```js
+fs.writeFile('file.txt', 'Hello, world!', (err) => {
+  if (err) throw err;
+});
+```
+
+* Sync: `fs.writeFileSync(file, data)`
+* Promise: `fs.promises.writeFile(file, data)`
+
+---
+
+### `fs.appendFile(path, data, options, callback)`
+
+Appends data to a file. Creates file if not exists.
+
+```js
+fs.appendFile('file.txt', 'Additional text\n', (err) => {
+  if (err) throw err;
+});
+```
+
+* Sync: `fs.appendFileSync(path, data)`
+* Promise: `fs.promises.appendFile(path, data)`
+
+---
+
+### `fs.open(path, flags, mode, callback)`
+
+Opens a file and returns a file descriptor.
+
+```js
+fs.open('file.txt', 'r', (err, fd) => {
+  if (err) throw err;
+  console.log(fd);
+});
+```
+
+Flags:
+
+* `'r'` – read
+* `'w'` – write
+* `'a'` – append
+* `'r+'` – read/write
+
+---
+
+### `fs.close(fd, callback)`
+
+Closes a file descriptor.
+
+```js
+fs.close(fd, (err) => {
+  if (err) throw err;
+});
+```
+
+---
+
+### `fs.copyFile(src, dest, mode, callback)`
+
+Copies file content.
+
+```js
+fs.copyFile('source.txt', 'dest.txt', (err) => {
+  if (err) throw err;
+});
+```
+
+* Sync: `fs.copyFileSync()`
+* Promise: `fs.promises.copyFile()`
+
+---
+
+### `fs.rename(oldPath, newPath, callback)`
+
+Renames or moves a file.
+
+```js
+fs.rename('old.txt', 'new.txt', (err) => {
+  if (err) throw err;
+});
+```
+
+---
+
+### `fs.unlink(path, callback)`
+
+Deletes a file.
+
+```js
+fs.unlink('file.txt', (err) => {
+  if (err) throw err;
+});
+```
+
+---
+
+## 2. **Directory Operations**
+
+### `fs.mkdir(path, options, callback)`
+
+Creates a new directory.
+
+```js
+fs.mkdir('myDir', { recursive: true }, (err) => {
+  if (err) throw err;
+});
+```
+
+* `recursive: true` allows creation of nested directories.
+* Sync: `fs.mkdirSync()`
+* Promise: `fs.promises.mkdir()`
+
+---
+
+### `fs.rmdir(path, options, callback)`
+
+Removes a directory (only if empty). Deprecated in favor of `fs.rm`.
+
+---
+
+### `fs.rm(path, options, callback)`
+
+Deletes files and directories.
+
+```js
+fs.rm('myDir', { recursive: true, force: true }, (err) => {
+  if (err) throw err;
+});
+```
+
+* `recursive: true` removes directories recursively.
+* `force: true` ignores non-existent files.
+
+---
+
+### `fs.readdir(path, options, callback)`
+
+Reads the contents of a directory.
+
+```js
+fs.readdir('./', (err, files) => {
+  if (err) throw err;
+  console.log(files);
+});
+```
+
+* Sync: `fs.readdirSync()`
+* Promise: `fs.promises.readdir()`
+
+---
+
+### `fs.stat(path, callback)`
+
+Returns info about a file/directory (size, type, etc.).
+
+```js
+fs.stat('file.txt', (err, stats) => {
+  if (err) throw err;
+  console.log(stats.isFile());      // true/false
+  console.log(stats.isDirectory()); // true/false
+});
+```
+
+---
+
+### `fs.exists(path, callback)`
+
+Checks if a file/directory exists.
+
+```js
+fs.exists('file.txt', (exists) => {
+  console.log(exists ? 'Exists' : 'Does not exist');
+});
+```
+
+> Deprecated. Use `fs.access()` instead.
+
+---
+
+### `fs.access(path, mode, callback)`
+
+Tests permissions.
+
+```js
+fs.access('file.txt', fs.constants.F_OK, (err) => {
+  console.log(err ? 'No access' : 'Accessible');
+});
+```
+
+---
+
+# **Streams in Node.js `fs` Module**
+
+##  What is a Stream?
+
+A **stream** is a sequence of data chunks being **read from or written to** a source **piece-by-piece** instead of all at once.
+
+Streams are efficient for:
+
+* Handling **large files**
+* **Real-time data processing**
+* **Non-blocking I/O**
+
+---
+
+## Why Use Streams?
+
+* Prevents loading the **entire file into memory**
+* Works well with **large files** or **data pipelines**
+* Supports **piping**, which allows chaining readable and writable streams
+
+---
+
+## Types of Streams in Node.js
+
+1. **Readable Streams** → read data
+2. **Writable Streams** → write data
+3. **Duplex Streams** → both read and write
+4. **Transform Streams** → modify data during read/write (e.g., compression)
+
+---
+
+## `fs` Module and Streams
+
+The `fs` module provides:
+
+* `fs.createReadStream(path, options)` – for reading files
+* `fs.createWriteStream(path, options)` – for writing files
+
+---
+
+## 1. **`fs.createReadStream()`**
+
+### Purpose:
+
+Read file contents as a stream.
+
+### Syntax:
+
+```js
+fs.createReadStream(path, options)
+```
+
+### Example:
+
+```js
+const fs = require('fs');
+
+const readStream = fs.createReadStream('largeFile.txt', { encoding: 'utf8' });
+
+readStream.on('data', (chunk) => {
+  console.log('Received chunk:', chunk);
+});
+
+readStream.on('end', () => {
+  console.log('Finished reading file');
+});
+
+readStream.on('error', (err) => {
+  console.error('Error reading file:', err);
+});
+```
+
+### Events:
+
+* `data`: emitted when a chunk is available
+* `end`: when file reading is complete
+* `error`: if an error occurs
+
+---
+
+## 2. **`fs.createWriteStream()`**
+
+### Purpose:
+
+Write data to a file using streaming.
+
+### Syntax:
+
+```js
+fs.createWriteStream(path, options)
+```
+
+### Example:
+
+```js
+const fs = require('fs');
+
+const writeStream = fs.createWriteStream('output.txt');
+
+writeStream.write('First line\n');
+writeStream.write('Second line\n');
+writeStream.end(); // must call to close the stream
+
+writeStream.on('finish', () => {
+  console.log('All data written to file');
+});
+
+writeStream.on('error', (err) => {
+  console.error('Error writing file:', err);
+});
+```
+
+---
+
+## 3. **Piping Streams (Read to Write)**
+
+### Use Case:
+
+Copying content from one file to another **without buffering whole file into memory**.
+
+### Example:
+
+```js
+const fs = require('fs');
+
+const readStream = fs.createReadStream('input.txt');
+const writeStream = fs.createWriteStream('output.txt');
+
+readStream.pipe(writeStream);
+```
+
+* `pipe()` connects output of one stream to input of another.
+* Handles backpressure automatically.
+
+---
+
+## 4. **Options You Can Use**
+
+### In `createReadStream()` or `createWriteStream()`:
+
+| Option          | Description                               |
+| --------------- | ----------------------------------------- |
+| `encoding`      | Encoding type (e.g., `'utf8'`, `'ascii'`) |
+| `start`         | Byte offset to start reading/writing      |
+| `end`           | Byte offset to stop                       |
+| `highWaterMark` | Buffer size (default 64KB)                |
+| `flags`         | File open flags like `'r'`, `'w'`, `'a'`  |
+
+---
+
+## 5. **Real-World Use Cases**
+
+* Reading logs line-by-line
+* Uploading large files
+* Media streaming
+* Realtime file monitoring
+* Compressing/decompressing using transform streams (e.g. `zlib.createGzip()`)
+  
+---
+
+### `fs.createWriteStream(path, options)`
+
+Writes data as a stream.
+
+```js
+const writeStream = fs.createWriteStream('output.txt');
+writeStream.write('Streaming text');
+writeStream.end();
+```
+
+---
+
+## 4. **Watching Files and Directories**
+
+### `fs.watch(filename, options, listener)`
+
+Watches for changes in a file or directory.
+
+```js
+fs.watch('file.txt', (eventType, filename) => {
+  console.log(`${filename} changed: ${eventType}`);
+});
+```
+
+---
+
+## 5. **Recursive Deletion Example**
+
+```js
+const deleteFolderRecursive = (path) => {
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach((file) => {
+      const curPath = `${path}/${file}`;
+      if (fs.lstatSync(curPath).isDirectory()) {
+        deleteFolderRecursive(curPath);
+      } else {
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
+```
+
+---
+
+## Common Constants
+
+Available under `fs.constants`:
+
+* `F_OK` – File is visible
+* `R_OK` – Read permission
+* `W_OK` – Write permission
+* `X_OK` – Execute permission
+
+Example:
+
+```js
+fs.access('script.sh', fs.constants.X_OK, (err) => {
+  console.log(err ? 'Not executable' : 'Executable');
+});
+```
+
+---
+
+## Summary Table
+
+| Function     | Sync Version     | Promise Version          | Description                 |
+| ------------ | ---------------- | ------------------------ | --------------------------- |
+| `readFile`   | `readFileSync`   | `fs.promises.readFile`   | Read file                   |
+| `writeFile`  | `writeFileSync`  | `fs.promises.writeFile`  | Write to file               |
+| `appendFile` | `appendFileSync` | `fs.promises.appendFile` | Append to file              |
+| `mkdir`      | `mkdirSync`      | `fs.promises.mkdir`      | Create directory            |
+| `rm`         | `rmSync`         | `fs.promises.rm`         | Remove file/directory       |
+| `readdir`    | `readdirSync`    | `fs.promises.readdir`    | Read directory              |
+| `rename`     | `renameSync`     | `fs.promises.rename`     | Rename file or directory    |
+| `stat`       | `statSync`       | `fs.promises.stat`       | Get file/directory stats    |
+| `copyFile`   | `copyFileSync`   | `fs.promises.copyFile`   | Copy a file                 |
+| `access`     | `accessSync`     | `fs.promises.access`     | Check file/directory access |
+
+---
 
 
 # The HTTP Module in Node.js
