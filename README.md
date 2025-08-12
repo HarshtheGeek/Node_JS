@@ -621,6 +621,38 @@ fs.access('file.txt', fs.constants.F_OK, (err) => {
   console.log(err ? 'No access' : 'Accessible');
 });
 ```
+---
+
+# Key Points Summary
+
+* **`fs.readdirSync(directoryPath)`**
+  Returns an **array of filenames** (strings) in the directory.
+  **Sync methods do not take callbacks** and return results directly.
+
+* **Synchronous (`Sync`) methods in `fs`**
+  Block the event loop until operation finishes.
+  Examples: `fs.readFileSync`, `fs.writeFileSync`, `fs.mkdirSync`.
+  They **do not use callbacks**; instead, they return values or throw errors.
+
+* **Reading files synchronously (`fs.readFileSync(path, encoding)`)**
+  If you want a string, **always specify encoding** like `'utf8'`.
+  Otherwise, it returns a raw Buffer.
+
+* **Checking if a file exists**
+  Use `fs.existsSync(path)` which returns a boolean.
+  Useful before reading or writing files to avoid errors.
+
+* **Appending data to files**
+  Use `fs.appendFileSync(path, data)` to add content without overwriting.
+
+* **`path.join(...)`**
+  Combines multiple path segments into a single, normalized path string.
+
+* **Checking if an array contains a file**
+  Use `array.includes(filename)` to verify if a specific file exists in the directory listing.
+
+---
+
 
 ---
 
