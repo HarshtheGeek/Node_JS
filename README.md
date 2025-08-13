@@ -248,8 +248,6 @@ console.log(localStorage.key(0)); // "a" or "b" (order not guaranteed)
 
 ## **4. Full Example – CRUD with localStorage**
 
-Here’s a small working example that does **Create, Read, Update, Delete** with localStorage:
-
 ```javascript
 // CREATE
 localStorage.setItem("name", "Harsh");
@@ -407,15 +405,11 @@ JS Object
 ❌ Forgetting to use `JSON.parse()` after retrieving → You can’t access object properties
 ❌ Storing sensitive info like passwords in localStorage → Security risk (XSS attacks can read it)
 
----
 ## Important : 
 1. localStorage Always Works in Strings
 No matter what you put in, it stores only text.
 
 If you pass anything other than a string, JavaScript will force-convert it into a string — but that can mess up complex data (arrays, objects).
-
----
-Alright Harsh, let’s break down **sessionStorage** in detail — it’s the sibling of `localStorage`, but with some important differences.
 
 ---
 
@@ -429,7 +423,7 @@ The main difference:
 
 ---
 
-## **2. Key Features**
+## **Key Features**
 
 * **Scope**: Data is available only within the **same browser tab** (not shared across tabs).
 * **Lifetime**: Cleared automatically when the tab/window is closed.
@@ -439,7 +433,7 @@ The main difference:
 
 ---
 
-## **3. Methods in sessionStorage**
+## **Methods in sessionStorage**
 
 Same as `localStorage`:
 
@@ -479,7 +473,7 @@ sessionStorage.clear();
 
 ---
 
-## **4. Differences Between sessionStorage & localStorage**
+## **Differences Between sessionStorage & localStorage**
 
 | Feature         | localStorage                                  | sessionStorage                                     |
 | --------------- | --------------------------------------------- | -------------------------------------------------- |
@@ -490,7 +484,7 @@ sessionStorage.clear();
 
 ---
 
-## **5. Real-World Use Cases for sessionStorage**
+## **Real-World Use Cases for sessionStorage**
 
 * **Shopping checkout process** → Keep cart data only for the current checkout session.
 * **Form data** → Temporarily save partially filled forms so it’s not lost on page reload.
@@ -500,7 +494,6 @@ sessionStorage.clear();
 ❌ If you close the tab and reopen the page, the text is gone.
 
 ---
-
 
 # NODE JS MODULE SYSTEM
 The Node.js module system is a way to organize and manage code by dividing it into reusable, maintainable, and independent pieces called modules. This system allows developers to include and use functionalities in different parts of an application without rewriting code.
@@ -644,6 +637,7 @@ console.log(arguments.callee.toString());
 ---
 
 # NODE PACKAGE MANAGER
+
 A package manager in Node.js is a tool that simplifies the process of managing, installing, updating, and removing packages (reusable code libraries) in a Node.js project. It also handles dependencies between these packages, ensuring that the project functions as expected.
 
 there are 2 ways for creating a package: 
@@ -654,9 +648,10 @@ there are 2 ways for creating a package:
 ``` npm uninstall ```
 ``` npm update ```
 
-# NOTE: Loadash is one of the package which can be used in node js
+**NOTE: Loadash is one of the package which can be used in node js**
 
 # PATH MODULE 
+
 The path module in node js could be defined as a built-in tool that helps you work with file and directory paths on your computer. It provides simple ways to:
 
 - Combine parts of a file path.
@@ -684,7 +679,7 @@ Sure. Here's a **clear and detailed explanation of**:
 
 ## 1. **Blocking vs Non-Blocking in Node.js**
 
-### 🔹 **Blocking**
+### **Blocking**
 
 A **blocking** operation stops the execution of further code **until the current task completes**.
 
@@ -709,7 +704,7 @@ console.log('Done'); // Waits until reading is complete
 Done
 ```
 
-### 🔹 **Non-Blocking**
+### **Non-Blocking**
 
 A **non-blocking** operation allows the program to continue executing **while the operation is being processed in the background**.
 
@@ -984,6 +979,7 @@ fs.access('file.txt', fs.constants.F_OK, (err) => {
   console.log(err ? 'No access' : 'Accessible');
 });
 ```
+
 ---
 
 # Key Points Summary
@@ -1013,9 +1009,6 @@ fs.access('file.txt', fs.constants.F_OK, (err) => {
 
 * **Checking if an array contains a file**
   Use `array.includes(filename)` to verify if a specific file exists in the directory listing.
-
----
-
 
 ---
 
@@ -1263,9 +1256,10 @@ fs.access('script.sh', fs.constants.X_OK, (err) => {
 
 # The HTTP Module in Node.js
 
-The HTTP module in Node.js is a **built-in module** that allows you to create and handle HTTP servers and clients. It is used to build web servers and handle data exchanged over the HTTP protocol.
+The HTTP module in Node.js is a **built-in module** that allows you to create and handle HTTP servers and clients. It is used to build web servers and handle data exchanged over the HTTP protocol. 
 
----
+- Server-side: The HTTP module sends responses and receives requests.
+- Client-side: The HTTP module can send requests to other servers.
 
 ## Key Features of the HTTP Module
 
@@ -1340,34 +1334,71 @@ server.listen(3000, () => {
   console.log('Server running at http://localhost:3000');
 });
 ```
-
 ---
 
-## Explanation of Key Methods
+# HTTP Methods
 
 ### `http.createServer(callback)`
 
 * Creates an HTTP server instance.
 * `callback` function executes for **every incoming request**.
-* Parameters:
 
-  * `req` → Incoming request object
-  * `res` → Outgoing response object
+**Parameters of the callback:**
+
+* `req` → Incoming request object
+
+  * `req.url` → The path requested by the client (e.g., `/json`).
+  * `req.method` → The HTTP method used (e.g., `GET`, `POST`, `PUT`, `DELETE`).
+* `res` → Outgoing response object
+
+---
 
 ### `res.writeHead(statusCode, headers)`
 
-* Sets **HTTP status code** (e.g., `200` = success, `404` = not found)
-* Sets **response headers** (e.g., `Content-Type`)
+* Sets HTTP status code (e.g., `200` = success, `404` = not found)
+* Sets response headers (e.g., `Content-Type`)
+
+---
 
 ### `res.end([data])`
 
-* Ends the response and sends data to the client.
-* Can send **plain text, JSON strings, or any data in string/buffer form**.
+* Ends the response and **sends data to the client**.
+* Can send plain text, JSON strings, or any data in string/buffer form.
+
+---
 
 ### `server.listen(port, callback)`
 
 * Starts the server on the specified port.
 * Callback runs once the server is ready.
+
+---
+
+### Example with `req.method`:
+
+```js
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  if (req.url === '/json' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'Hello JSON!' }));
+  } else if (req.url === '/json' && req.method === 'POST') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('POST request received!');
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+  }
+});
+
+server.listen(3000, () => console.log('Server running on port 3000'));
+```
+
+Here:
+
+* `req.method` lets you **handle requests differently depending on GET, POST, etc.**
+* `req.url` helps you **route requests based on the path**.
 
 ---
 
