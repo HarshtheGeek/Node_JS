@@ -1261,24 +1261,48 @@ fs.access('script.sh', fs.constants.X_OK, (err) => {
 
 ---
 
-
 # The HTTP Module in Node.js
 
-The HTTP module in Node.js is a built-in module that allows you to create and handle HTTP requests and responses. It is used to build web servers and handle data exchanged over the HTTP protocol.
+The HTTP module in Node.js is a **built-in module** that allows you to create and handle HTTP servers and clients. It is used to build web servers and handle data exchanged over the HTTP protocol.
 
 ---
 
 ## Key Features of the HTTP Module
 
-- **Built-in Module**: No need to install it separately; it is included in Node.js by default.
-- **Supports Both HTTP Requests and Responses**: You can create servers to handle incoming requests or make HTTP requests to other servers.
-- **Event-Driven**: The module operates asynchronously, allowing high-performance handling of multiple requests.
+- **Built-in Module**: No need to install; included with Node.js.
+- **Handles Requests and Responses**: Create servers to respond to clients or act as a client to make HTTP requests.
+- **Event-Driven & Asynchronous**: Can handle multiple requests efficiently.
+- **Low-Level Control**: Gives full control over headers, status codes, and data streams.
+- **Data Transmission**: HTTP responses are sent as **strings or bytes**, not as JavaScript objects. Objects must be converted to strings (usually via `JSON.stringify`) before sending.
+
+---
+
+## MIME Types (Content-Type)
+
+When sending data over HTTP, the **Content-Type** header tells the client what format the data is in. Common MIME types:
+
+| MIME Type                | Description                           |
+|--------------------------|---------------------------------------|
+| `text/plain`             | Plain text content                     |
+| `text/html`              | HTML content                            |
+| `application/json`       | JSON-formatted data                     |
+| `application/javascript` | JavaScript code                        |
+| `image/png` / `image/jpeg` | Image data                            |
+| `multipart/form-data`    | Form data with files                   |
+
+**Example**: Sending JSON data:
+
+```javascript
+res.writeHead(200, { 'Content-Type': 'application/json' });
+res.end(JSON.stringify({ message: "Hello, World!" }));
+````
+
+* `JSON.stringify()` converts a JavaScript object into a **JSON string**, which can be transmitted over HTTP.
+* Clients (browsers, Postman, Axios, fetch) parse this JSON string back into an object.
 
 ---
 
 ## How to Import the HTTP Module
-
-You can include the HTTP module in your Node.js application using the `require` function:
 
 ```javascript
 const http = require('http');
@@ -1295,45 +1319,68 @@ const http = require('http');
 
 ## Example: Creating an HTTP Server
 
-This is a basic example of creating an HTTP server with the HTTP module:
-
 ```javascript
 const http = require('http');
 
-// Create a server object
+// Create an HTTP server
 const server = http.createServer((req, res) => {
-  // Set response header
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-
-  // Send a response to the client
-  res.end('Hello, World!');
+  if (req.url === '/json') {
+    // Send JSON response
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: "Hello, JSON!" }));
+  } else {
+    // Send plain text response
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, World!');
+  }
 });
 
-// Start the server and listen on port 3000
+// Start the server on port 3000
 server.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+  console.log('Server running at http://localhost:3000');
 });
 ```
 
 ---
 
-## Explanation of the Example
+## Explanation of Key Methods
 
-### `http.createServer()`
-- Creates an HTTP server instance.
-- Accepts a callback function that is executed for every incoming request. This function has two arguments:
-  - `req`: Represents the incoming request object.
-  - `res`: Represents the outgoing response object.
+### `http.createServer(callback)`
 
-### `res.writeHead(200, {...})`
-- Sets the HTTP response status code (200 means success) and headers.
+* Creates an HTTP server instance.
+* `callback` function executes for **every incoming request**.
+* Parameters:
 
-### `res.end()`
-- Ends the response and sends data to the client.
+  * `req` → Incoming request object
+  * `res` → Outgoing response object
+
+### `res.writeHead(statusCode, headers)`
+
+* Sets **HTTP status code** (e.g., `200` = success, `404` = not found)
+* Sets **response headers** (e.g., `Content-Type`)
+
+### `res.end([data])`
+
+* Ends the response and sends data to the client.
+* Can send **plain text, JSON strings, or any data in string/buffer form**.
 
 ### `server.listen(port, callback)`
-- Starts the server and listens on the specified port for incoming requests.
 
+* Starts the server on the specified port.
+* Callback runs once the server is ready.
+
+---
+
+## Summary
+
+* Use **`text/plain`** for plain text responses.
+* Use **`application/json`** for JSON objects (must stringify objects first).
+* The HTTP module provides **low-level control**, while libraries like Axios or fetch provide **higher-level conveniences** for making HTTP requests.
+* Understanding headers, MIME types, and how `res.writeHead` and `res.end` work is crucial for building servers in Node.js.
+* The client (like a browser or Postman) expects a string formatted as JSON when the content type is 'application/json'.
+* When the client receives this string, it can parse it back into an object using something like JSON.parse() in JavaScript or automatically if it’s a frontend framework.
+
+---
 
 # Payload
 
