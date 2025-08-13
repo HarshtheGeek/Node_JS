@@ -137,9 +137,19 @@ project/
 │   └── userRoutes.js
 └── app.js
 ```
-Alright Harsh, let’s break down **localStorage** in detail so you understand exactly what it is, how it works, and how to use all of its methods — with examples you can actually run.
 
 ---
+# Browser Environment
+The browser gives JavaScript extra capabilities via Web APIs like:
+
+**setTimeout / setInterval (timers)**
+
+**fetch (HTTP requests)**
+
+**document (DOM manipulation)**
+
+**localStorage (storage)**
+
 
 ## **1. What is Local Storage?**
 
@@ -284,9 +294,6 @@ localStorage.setItem('user', JSON.stringify(user));
 const storedUser = JSON.parse(localStorage.getItem('user'));
 console.log(storedUser.name); // Harsh
 ```
-
-Alright Harsh, let’s really unpack this so it becomes second nature.
-
 ---
 
 ## **Why Local Storage Only Stores Strings**
@@ -412,7 +419,7 @@ Alright Harsh, let’s break down **sessionStorage** in detail — it’s the si
 
 ---
 
-## **1. What is sessionStorage?**
+## **2. What is sessionStorage?**
 
 `sessionStorage` is part of the **Web Storage API** that stores **key–value pairs** in a web browser, just like `localStorage`.
 The main difference:
