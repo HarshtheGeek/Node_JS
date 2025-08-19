@@ -2020,4 +2020,124 @@ myUrl.port = '3000';
 ---
 
 
+Got it. Let’s go step by step and break down the difference between `req.body` and `req.query` in Express.
+
+---
+
+### 1. `req.body`
+
+* **What it is**: Data that comes in the **body of the HTTP request**.
+* **When it is used**: Mostly with `POST`, `PUT`, and `PATCH` requests, where you send data to the server.
+* **How to access it**: Requires body-parsing middleware (e.g., `app.use(express.json())`).
+* **Format**: Can be JSON, form data, or raw text depending on headers.
+
+**Example:**
+
+```js
+// Route
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  res.send(`User: ${username}, Pass: ${password}`);
+});
+```
+
+**Request in Postman:**
+
+* Method: `POST`
+* URL: `http://localhost:4000/login`
+* Body (raw JSON):
+
+  ```json
+  {
+    "username": "harsh",
+    "password": "12345"
+  }
+  ```
+
+**Server receives in `req.body`:**
+
+```json
+{
+  "username": "harsh",
+  "password": "12345"
+}
+```
+
+---
+
+### 2. `req.query`
+
+* **What it is**: Data sent in the **query string of the URL**.
+* **When it is used**: Mostly with `GET` requests, where you want to filter or fetch data without sending a body.
+* **How to access it**: Always available, no middleware required.
+* **Format**: Key-value pairs appended to the URL after `?`.
+
+**Example:**
+
+```js
+// Route
+app.get("/search", (req, res) => {
+  const { keyword, page } = req.query;
+  res.send(`Search keyword: ${keyword}, Page: ${page}`);
+});
+```
+
+**Request in Postman or browser:**
+
+```
+GET http://localhost:4000/search?keyword=node&page=2
+```
+
+**Server receives in `req.query`:**
+
+```json
+{
+  "keyword": "node",
+  "page": "2"
+}
+```
+
+---
+
+### 3. Key Differences
+
+| Aspect               | `req.body`                                                                  | `req.query`                                    |
+| -------------------- | --------------------------------------------------------------------------- | ---------------------------------------------- |
+| Source of data       | Request body (payload)                                                      | Query string in the URL                        |
+| Typical HTTP methods | `POST`, `PUT`, `PATCH`                                                      | `GET`                                          |
+| Data size            | Can be large (JSON, file uploads, etc.)                                     | Small, since it’s part of URL                  |
+| Encoding             | JSON, form-data, raw text, etc.                                             | Always key-value pairs in string form          |
+| Requires middleware  | Yes (`express.json()`, `express.urlencoded()`)                              | No, directly available                         |
+| Use case             | Sending structured or sensitive data (login, form submission, API payloads) | Filtering, sorting, pagination, search queries |
+
+---
+
+### 4. Example side by side
+
+**POST with `req.body`:**
+
+```
+POST http://localhost:4000/api/users
+Body:
+{
+  "name": "Harsh",
+  "email": "harsh@example.com"
+}
+```
+
+**GET with `req.query`:**
+
+```
+GET http://localhost:4000/api/users?name=Harsh&email=harsh@example.com
+```
+
+Both can represent the same data, but:
+
+* `req.body` keeps it in the payload (cleaner, more secure, better for sensitive/long data).
+* `req.query` puts it in the URL (good for filters, but visible in browser history).
+
+---
+
+
+
 
