@@ -1597,11 +1597,7 @@ myPromise
 
 # EVENT EMITTER
 
-Here’s a set of EventEmitter notes written in GitHub-friendly Markdown format:
-
----
-
-# EventEmitter in Node.js
+**EventEmitter in Node.js**
 
 The **EventEmitter** class in Node.js allows for the implementation of the **Observer design pattern**, enabling objects to emit events and other objects to respond to those events.
 
@@ -2137,6 +2133,254 @@ Both can represent the same data, but:
 * `req.query` puts it in the URL (good for filters, but visible in browser history).
 
 ---
+
+# Event Loop: Synchronous Code, Microtasks, and Macrotasks
+
+## 1. Event Loop Overview
+Node.js executes code using an **event loop**, which handles **synchronous code** and **asynchronous tasks**.  
+Tasks are categorized as:
+
+- **Synchronous code** → runs immediately
+- **Microtasks** → run after synchronous code, before macrotasks
+- **Macrotasks** → run after all synchronous code and microtasks
+
+---
+
+## 2. Synchronous Code
+- Runs **line by line**.
+- Blocks the thread until finished.
+- Example:
+
+```javascript
+console.log("Start");
+console.log("End");
+````
+
+**Output:**
+
+```
+Start
+End
+```
+
+---
+
+## 3. Microtasks
+
+* Run **immediately after the current synchronous code**.
+* Examples:
+
+  * `process.nextTick()`
+  * `Promise.then()`
+  * `queueMicrotask()`
+* Executed **in order** of creation.
+
+**Example:**
+
+```javascript
+console.log("Start");
+
+process.nextTick(() => {
+  console.log("Microtask 1: Next Tick");
+});
+
+Promise.resolve().then(() => {
+  console.log("Microtask 2: Promise");
+});
+
+queueMicrotask(() => {
+  console.log("Microtask 3: queueMicrotask");
+});
+
+console.log("End");
+```
+
+**Output:**
+
+```
+Start
+End
+Microtask 1: Next Tick
+Microtask 2: Promise
+Microtask 3: queueMicrotask
+```
+
+---
+
+## 4. Macrotasks
+
+* Run **after all synchronous code and microtasks**.
+* Examples:
+
+  * `setTimeout()`
+  * `setInterval()`
+  * `setImmediate()`
+  * I/O operations
+
+**Example:**
+
+```javascript
+console.log("Start");
+
+setTimeout(() => {
+  console.log("Macrotask: setTimeout");
+}, 0);
+
+console.log("End");
+```
+
+**Output:**
+
+```
+Start
+End
+Macrotask: setTimeout
+```
+
+---
+
+## 5. Execution Order Summary
+
+1. **Synchronous code** → runs immediately
+2. **Microtasks** → run after current synchronous code, in order
+3. **Macrotasks** → run after all synchronous code and microtasks
+
+**Analogy:**
+
+* Cooking a dish → synchronous code
+* Tasting/checking the dish → microtasks
+* Serving the dish → macrotask
+
+---
+
+## Main methods : 
+
+- Node.js APIs/Methods You Should Know
+
+- process.nextTick(callback) → schedules a microtask
+
+- Promise.then(callback) → schedules a microtask
+
+- queueMicrotask(callback) → schedules a microtask
+
+- setTimeout(callback, delay) → schedules a macrotask
+
+- setImmediate(callback) → macrotask, similar to setTimeout but slightly different timing
+
+- console.log() → helps you visualize execution order
+  
+```
+
+Sure! Let’s go step by step.
+
+---
+
+## **Node.js `crypto` Module**
+
+The `crypto` module is a **built-in Node.js module** that provides **cryptographic functionality**. It lets you do things like:
+
+* Hashing data (e.g., passwords, files)
+* Encrypting and decrypting data
+* Generating random bytes or tokens
+* Creating HMACs (keyed hashes)
+
+It’s part of Node.js, so **you don’t need to install anything**—just require it.
+
+---
+
+### **1. Importing Crypto**
+
+```javascript
+const crypto = require('crypto');
+```
+
+---
+
+### **2. Common Uses**
+
+#### **a) Hashing**
+
+* Hashing converts data into a fixed-length string (like a fingerprint).
+* Example: storing passwords securely.
+
+```javascript
+const hash = crypto.createHash('sha256')
+                   .update('myPassword123')
+                   .digest('hex');
+
+console.log(hash);
+// Example output: "ef92b7c...f5d6"
+```
+
+---
+
+#### **b) HMAC (Hash-based Message Authentication Code)**
+
+* Hash with a secret key → ensures data integrity and authenticity.
+
+```javascript
+const hmac = crypto.createHmac('sha256', 'mySecretKey')
+                   .update('Important message')
+                   .digest('hex');
+
+console.log(hmac);
+```
+
+---
+
+#### **c) Random Values**
+
+* Generate random numbers, tokens, or IDs.
+
+```javascript
+const randomBytes = crypto.randomBytes(16).toString('hex');
+console.log(randomBytes); // Example: "9b1deb4d8c3f5a6e8a1b2c3d4e5f6789"
+```
+
+---
+
+#### **d) Encryption and Decryption**
+
+* Encrypt data so only someone with the key can decrypt it.
+
+```javascript
+const algorithm = 'aes-256-cbc';
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(16);
+
+// Encrypt
+const cipher = crypto.createCipheriv(algorithm, key, iv);
+let encrypted = cipher.update('Hello World', 'utf8', 'hex');
+encrypted += cipher.final('hex');
+
+// Decrypt
+const decipher = crypto.createDecipheriv(algorithm, key, iv);
+let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+decrypted += decipher.final('utf8');
+
+console.log(encrypted); // Encrypted text
+console.log(decrypted); // "Hello World"
+```
+
+---
+
+### **3. Key Points**
+
+* **Built-in** → no installation required.
+* **Secure** → uses strong cryptography standards.
+* **Multiple uses** → hashing, HMAC, encryption, random bytes, key generation.
+
+---
+
+### **Real-World Use Cases**
+
+1. **Password storage** → hash passwords before saving.
+2. **JWT signing/verification** → HMAC or RSA keys.
+3. **Secure tokens** → generate session IDs or API keys.
+4. **Encrypt sensitive data** → like files or messages.
+
+---
+
 
 
 
