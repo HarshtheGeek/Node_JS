@@ -401,9 +401,9 @@ JS Object
 
 ## **Common Mistakes**
 
-❌ Forgetting to use `JSON.stringify()` before saving → You get `[object Object]`
-❌ Forgetting to use `JSON.parse()` after retrieving → You can’t access object properties
-❌ Storing sensitive info like passwords in localStorage → Security risk (XSS attacks can read it)
+- ❌ Forgetting to use `JSON.stringify()` before saving → You get `[object Object]`
+- ❌ Forgetting to use `JSON.parse()` after retrieving → You can’t access object properties
+- ❌ Storing sensitive info like passwords in localStorage → Security risk (XSS attacks can read it)
 
 ## Important : 
 1. localStorage Always Works in Strings
@@ -1258,41 +1258,78 @@ fs.access('script.sh', fs.constants.X_OK, (err) => {
 
 The HTTP module in Node.js is a **built-in module** that allows you to create and handle HTTP servers and clients. It is used to build web servers and handle data exchanged over the HTTP protocol. 
 
-- Server-side: The HTTP module sends responses and receives requests.
-- Client-side: The HTTP module can send requests to other servers.
+---
 
-## Key Features of the HTTP Module
+## What is HTTP?
 
-- **Built-in Module**: No need to install; included with Node.js.
-- **Handles Requests and Responses**: Create servers to respond to clients or act as a client to make HTTP requests.
-- **Event-Driven & Asynchronous**: Can handle multiple requests efficiently.
-- **Low-Level Control**: Gives full control over headers, status codes, and data streams.
-- **Data Transmission**: HTTP responses are sent as **strings or bytes**, not as JavaScript objects. Objects must be converted to strings (usually via `JSON.stringify`) before sending.
+**HTTP (HyperText Transfer Protocol)** is the set of rules used by web browsers, servers, and other clients to communicate over the web.  
+
+- When a **client** (browser, app, Postman, etc.) wants something, it sends an **HTTP request** (a message).  
+- The **server** processes this request and sends back an **HTTP response**.  
+
+An **HTTP request** has two main parts:  
+- **Headers** → Metadata about the request (e.g., Content-Type, Authorization).  
+- **Body** → The actual data being sent (e.g., JSON payload, form data).  
+
+Example HTTP Request:
+```
+
+POST /login HTTP/1.1
+Host: api.myapp.com
+Content-Type: application/json
+
+{
+"email": "[harsh@example.com](mailto:harsh@example.com)",
+"password": "123456"
+}
+
+````
+
+Here:  
+- `POST /login HTTP/1.1` → Request line (method, path, protocol).  
+- `Host`, `Content-Type` → Headers.  
+- `{ "email": "...", "password": "..." }` → Body (payload).  
+
+---
+
+## HTTP in Node.js
+
+- **Server-side**: The HTTP module receives requests and sends responses.  
+- **Client-side**: The HTTP module can make requests to other servers.  
+
+### Key Features of the HTTP Module
+
+- **Built-in Module**: No installation required; included with Node.js.  
+- **Handles Requests and Responses**: Can both receive and send data.  
+- **Event-Driven & Asynchronous**: Handles multiple requests efficiently.  
+- **Low-Level Control**: Full access to headers, status codes, and data streams.  
+- **Data Transmission**: Responses are sent as **strings or bytes**, not as objects. Objects must be converted with `JSON.stringify` before sending.
 
 ---
 
 ## MIME Types (Content-Type)
 
-When sending data over HTTP, the **Content-Type** header tells the client what format the data is in. Common MIME types:
+The **Content-Type** header tells the client the format of the data being sent.  
 
 | MIME Type                | Description                           |
 |--------------------------|---------------------------------------|
-| `text/plain`             | Plain text content                     |
-| `text/html`              | HTML content                            |
-| `application/json`       | JSON-formatted data                     |
-| `application/javascript` | JavaScript code                        |
-| `image/png` / `image/jpeg` | Image data                            |
-| `multipart/form-data`    | Form data with files                   |
+| `text/plain`             | Plain text content                    |
+| `text/html`              | HTML content                          |
+| `application/json`       | JSON-formatted data                   |
+| `application/javascript` | JavaScript code                       |
+| `image/png` / `image/jpeg` | Image data                          |
+| `multipart/form-data`    | Form data with files                  |
 
-**Example**: Sending JSON data:
-
+**Example (sending JSON):**
 ```javascript
 res.writeHead(200, { 'Content-Type': 'application/json' });
 res.end(JSON.stringify({ message: "Hello, World!" }));
 ````
 
-* `JSON.stringify()` converts a JavaScript object into a **JSON string**, which can be transmitted over HTTP.
-* Clients (browsers, Postman, Axios, fetch) parse this JSON string back into an object.
+Notes:
+
+* `JSON.stringify()` converts an object into a JSON string for transmission.
+* Clients (browsers, Postman, fetch, Axios) parse this string back into an object.
 
 ---
 
@@ -1306,8 +1343,8 @@ const http = require('http');
 
 ## Primary Use Cases
 
-1. **Creating an HTTP Server**: Respond to client requests.
-2. **Making HTTP Requests**: Act as a client to fetch data from other servers.
+1. **Creating an HTTP Server** → Handle incoming requests and send responses.
+2. **Making HTTP Requests** → Act as a client to get data from other servers.
 
 ---
 
@@ -1334,49 +1371,50 @@ server.listen(3000, () => {
   console.log('Server running at http://localhost:3000');
 });
 ```
+
 ---
 
-# HTTP Methods
+# HTTP Methods in Node.js
 
 ### `http.createServer(callback)`
 
 * Creates an HTTP server instance.
-* `callback` function executes for **every incoming request**.
+* `callback` runs for **every incoming request**.
 
 **Parameters of the callback:**
 
 * `req` → Incoming request object
 
-  * `req.url` → The path requested by the client (e.g., `/json`).
-  * `req.method` → The HTTP method used (e.g., `GET`, `POST`, `PUT`, `DELETE`).
+  * `req.url` → Path requested (e.g., `/json`).
+  * `req.method` → HTTP method (e.g., `GET`, `POST`, `PUT`, `DELETE`).
 * `res` → Outgoing response object
 
 ---
 
 ### `res.writeHead(statusCode, headers)`
 
-* Sets HTTP status code (e.g., `200` = success, `404` = not found)
-* Sets response headers (e.g., `Content-Type`)
+* Sets HTTP status code (e.g., `200` = success, `404` = not found).
+* Sets response headers (e.g., `Content-Type`).
 
 ---
 
 ### `res.end([data])`
 
-* Ends the response and **sends data to the client**.
-* Can send plain text, JSON strings, or any data in string/buffer form.
+* Ends the response and sends data to the client.
+* Can send plain text, JSON strings, or any string/buffer.
 
 ---
 
 ### `server.listen(port, callback)`
 
 * Starts the server on the specified port.
-* Callback runs once the server is ready.
+* Runs callback once the server is listening.
 
 ---
 
 ### Example with `req.method`:
 
-```js
+```javascript
 const http = require('http');
 
 const server = http.createServer((req, res) => {
@@ -1397,20 +1435,158 @@ server.listen(3000, () => console.log('Server running on port 3000'));
 
 Here:
 
-* `req.method` lets you **handle requests differently depending on GET, POST, etc.**
-* `req.url` helps you **route requests based on the path**.
+* `req.method` → lets you respond differently for GET, POST, etc.
+* `req.url` → helps route requests to specific paths.
+
+---
+
+# JSON Web Token (JWT)
+
+## What is JWT?
+- **JWT (JSON Web Token)** is a compact, URL-safe way to represent claims between two parties.
+- It is commonly used for:
+  - Authentication
+  - Information exchange
+
+JWTs are digitally signed, so they can be verified and trusted.
+
+---
+
+## Structure of a JWT
+A JWT has **three parts**, separated by dots (`.`):
+
+```
+
+header.payload.signature
+
+```
+
+Example:
+```
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+eyJ1c2VyX2lkIjoxMjMsIm5hbWUiOiJKb2huIERvZSJ9.
+TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+
+````
+
+### 1. Header
+- Specifies the token type and the signing algorithm.
+- Example:
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+````
+
+### 2. Payload
+
+* Contains **claims** (information about the user or other data).
+* Types of claims:
+
+  * **Registered claims**: `iss` (issuer), `exp` (expiration), `sub` (subject), `aud` (audience)
+  * **Public claims**: Defined in IANA or shared across systems
+  * **Private claims**: Custom claims defined between parties
+* Example:
+
+```json
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "admin": true,
+  "exp": 1712345678
+}
+```
+
+### 3. Signature
+
+* Ensures the token hasn’t been tampered with.
+* Created by taking:
+
+  ```
+  HMACSHA256(
+    base64UrlEncode(header) + "." + base64UrlEncode(payload),
+    secret
+  )
+  ```
+
+---
+
+## Example JWT Flow (Authentication)
+
+1. **User logs in** with email and password.
+2. **Server validates** credentials and creates a JWT.
+3. Server sends JWT to client.
+4. **Client stores** the token (usually in localStorage, sessionStorage, or cookies).
+5. Client includes JWT in the **Authorization header** on future requests:
+
+   ```
+   Authorization: Bearer <JWT_TOKEN>
+   ```
+6. **Server verifies** the token before allowing access to protected routes.
+
+---
+
+## Advantages of JWT
+
+* **Stateless**: Server does not need to store session info.
+* **Scalable**: Works well in distributed systems.
+* **Compact**: Small and URL-safe.
+* **Secure**: Uses signing to verify authenticity.
+
+---
+
+## Disadvantages of JWT
+
+* **No easy revocation**: Once issued, it remains valid until expiration.
+* **Larger size than sessions**: Includes payload data in every request.
+* **Must be stored securely**: Storing in localStorage/cookies can be vulnerable to XSS or CSRF.
+
+---
+
+## Example in Practice
+
+### Login Response
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+            eyJpZCI6MSwibmFtZSI6IkpvaG4gRG9lIn0.
+            fYVz0R2-7nH2YJhCbt0x3Rk2lR5XbTr5yl31VfhgZtE"
+}
+```
+
+### Authenticated Request
+
+```
+GET /profile HTTP/1.1
+Host: api.myapp.com
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Decoded Payload
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "exp": 1712345678
+}
+```
 
 ---
 
 ## Summary
 
-* Use **`text/plain`** for plain text responses.
-* Use **`application/json`** for JSON objects (must stringify objects first).
-* The HTTP module provides **low-level control**, while libraries like Axios or fetch provide **higher-level conveniences** for making HTTP requests.
-* Understanding headers, MIME types, and how `res.writeHead` and `res.end` work is crucial for building servers in Node.js.
-* The client (like a browser or Postman) expects a string formatted as JSON when the content type is 'application/json'.
-* When the client receives this string, it can parse it back into an object using something like JSON.parse() in JavaScript or automatically if it’s a frontend framework.
+* JWT = `Header.Payload.Signature`
+* Used for **authentication** and **information sharing**
+* Should always be **signed** (and optionally encrypted)
+* Common header for sending token:
 
+  ```
+  Authorization: Bearer <JWT>
+  ```
 ---
 
 # Payload
@@ -1878,10 +2054,6 @@ console.log(url.searchParams.get('price'));    // Output: low
 
 ---
 
-Great question!
-
----
-
 ## What is `searchParams`?
 
 `searchParams` is a property of the **JavaScript `URL` object** that lets you easily work with the **query string parameters** in a URL.
@@ -2270,116 +2442,6 @@ Macrotask: setTimeout
 - console.log() → helps you visualize execution order
   
 ```
-
-Sure! Let’s go step by step.
-
----
-
-## **Node.js `crypto` Module**
-
-The `crypto` module is a **built-in Node.js module** that provides **cryptographic functionality**. It lets you do things like:
-
-* Hashing data (e.g., passwords, files)
-* Encrypting and decrypting data
-* Generating random bytes or tokens
-* Creating HMACs (keyed hashes)
-
-It’s part of Node.js, so **you don’t need to install anything**—just require it.
-
----
-
-### **1. Importing Crypto**
-
-```javascript
-const crypto = require('crypto');
-```
-
----
-
-### **2. Common Uses**
-
-#### **a) Hashing**
-
-* Hashing converts data into a fixed-length string (like a fingerprint).
-* Example: storing passwords securely.
-
-```javascript
-const hash = crypto.createHash('sha256')
-                   .update('myPassword123')
-                   .digest('hex');
-
-console.log(hash);
-// Example output: "ef92b7c...f5d6"
-```
-
----
-
-#### **b) HMAC (Hash-based Message Authentication Code)**
-
-* Hash with a secret key → ensures data integrity and authenticity.
-
-```javascript
-const hmac = crypto.createHmac('sha256', 'mySecretKey')
-                   .update('Important message')
-                   .digest('hex');
-
-console.log(hmac);
-```
-
----
-
-#### **c) Random Values**
-
-* Generate random numbers, tokens, or IDs.
-
-```javascript
-const randomBytes = crypto.randomBytes(16).toString('hex');
-console.log(randomBytes); // Example: "9b1deb4d8c3f5a6e8a1b2c3d4e5f6789"
-```
-
----
-
-#### **d) Encryption and Decryption**
-
-* Encrypt data so only someone with the key can decrypt it.
-
-```javascript
-const algorithm = 'aes-256-cbc';
-const key = crypto.randomBytes(32);
-const iv = crypto.randomBytes(16);
-
-// Encrypt
-const cipher = crypto.createCipheriv(algorithm, key, iv);
-let encrypted = cipher.update('Hello World', 'utf8', 'hex');
-encrypted += cipher.final('hex');
-
-// Decrypt
-const decipher = crypto.createDecipheriv(algorithm, key, iv);
-let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-decrypted += decipher.final('utf8');
-
-console.log(encrypted); // Encrypted text
-console.log(decrypted); // "Hello World"
-```
-
----
-
-### **3. Key Points**
-
-* **Built-in** → no installation required.
-* **Secure** → uses strong cryptography standards.
-* **Multiple uses** → hashing, HMAC, encryption, random bytes, key generation.
-
----
-
-### **Real-World Use Cases**
-
-1. **Password storage** → hash passwords before saving.
-2. **JWT signing/verification** → HMAC or RSA keys.
-3. **Secure tokens** → generate session IDs or API keys.
-4. **Encrypt sensitive data** → like files or messages.
-
----
 
 
 
