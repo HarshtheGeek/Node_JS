@@ -2443,6 +2443,257 @@ Macrotask: setTimeout
   
 ```
 
+Got it. Here’s a **detailed explanation of Axios methods, headers, tokens, and their use cases** in clean GitHub-style documentation.
+
+---
+
+# Axios Guide
+
+Axios is a popular JavaScript library for making **HTTP requests** from both the browser and Node.js. It simplifies working with APIs and supports features like promises, interceptors, and automatic JSON handling.
+
+---
+
+## 1. Making Requests
+
+Axios supports different HTTP methods:
+
+### GET request
+
+Used to **fetch data**.
+
+```js
+const res = await axios.get("http://localhost:5000/transcript?id=123");
+
+console.log(res.data);
+```
+
+* The `id=123` is passed as a query parameter.
+* No request body is sent in GET.
+
+---
+
+### POST request
+
+Used to **send data** (e.g., forms, JSON).
+
+```js
+const res = await axios.post("http://localhost:5000/transcript", {
+  youtubeurl: "https://youtu.be/dQw4w9WgXcQ"
+});
+
+console.log(res.data);
+```
+
+* The second argument is the request body (sent as JSON).
+* Commonly used for creating or submitting data.
+
+---
+
+### PUT request
+
+Used to **replace or update data**.
+
+```js
+const res = await axios.put("http://localhost:5000/user/123", {
+  name: "Harsh",
+  email: "harsh@example.com"
+});
+
+console.log(res.data);
+```
+
+---
+
+### PATCH request
+
+Used to **update partially**.
+
+```js
+const res = await axios.patch("http://localhost:5000/user/123", {
+  email: "newemail@example.com"
+});
+
+console.log(res.data);
+```
+
+---
+
+### DELETE request
+
+Used to **delete data**.
+
+```js
+const res = await axios.delete("http://localhost:5000/user/123");
+
+console.log(res.data);
+```
+
+---
+
+## 2. Request Config
+
+Axios allows passing a config object as the last parameter.
+
+Example:
+
+```js
+const res = await axios.post(
+  "http://localhost:5000/transcript",
+  { youtubeurl: "https://youtu.be/dQw4w9WgXcQ" },
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer your_token_here"
+    },
+    timeout: 5000 // request fails if it takes more than 5 seconds
+  }
+);
+
+console.log(res.data);
+```
+
+---
+
+## 3. Headers
+
+Headers carry **additional information** about a request.
+
+Common headers:
+
+* `Content-Type`: Tells the server the data format (e.g., `application/json`).
+* `Authorization`: Used to send tokens for authentication.
+* `Accept`: Specifies what response formats the client can handle (e.g., `application/json`).
+
+Example:
+
+```js
+headers: {
+  "Content-Type": "application/json",
+  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+}
+```
+
+---
+
+## 4. Authorization Tokens
+
+Tokens are required when an API is **protected** (not open to the public). They ensure only authenticated users can access it.
+
+### Common token types
+
+1. **Bearer Token (JWT)**
+
+   * Used in most modern APIs.
+   * Example:
+
+     ```http
+     Authorization: Bearer <token_here>
+     ```
+2. **API Key**
+
+   * Provided by the API service.
+   * Example:
+
+     ```http
+     Authorization: ApiKey <your_key>
+     ```
+3. **Basic Auth**
+
+   * Encodes username and password in Base64.
+   * Example:
+
+     ```http
+     Authorization: Basic <base64encoded(username:password)>
+     ```
+
+---
+
+## 5. Response Object
+
+Axios returns a response object containing:
+
+```js
+{
+  data: {},        // actual response body
+  status: 200,     // HTTP status code
+  statusText: 'OK',
+  headers: {},     // response headers
+  config: {},      // request configuration
+  request: {}      // the request object
+}
+```
+
+Example:
+
+```js
+const res = await axios.get("http://localhost:5000/transcript?id=123");
+console.log(res.data);      // transcript data
+console.log(res.status);    // 200
+```
+
+---
+
+## 6. Error Handling
+
+Axios errors can be caught with `try...catch`.
+
+```js
+try {
+  const res = await axios.get("http://localhost:5000/wrong-url");
+  console.log(res.data);
+} catch (error) {
+  if (error.response) {
+    // server responded with status code outside 2xx
+    console.log(error.response.status);
+    console.log(error.response.data);
+  } else if (error.request) {
+    // request was made but no response
+    console.log("No response:", error.request);
+  } else {
+    // something else
+    console.log("Error:", error.message);
+  }
+}
+```
+
+---
+
+## 7. When to Use Tokens
+
+* **Public API (like open YouTube transcript API via backend)**: no token needed.
+* **Private API (user data, payments, accounts)**: token required.
+* Example:
+
+  * A user logs in and gets a JWT token.
+  * The token is sent with every request in the `Authorization` header.
+  * The server verifies the token before allowing access.
+
+---
+
+## 8. Axios Interceptors
+
+You can use interceptors to attach tokens automatically.
+
+```js
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+```
+
+This way, you don’t have to manually add the header for every request.
+
+---
+
+Do you want me to extend this into a **real-world workflow** example, like:
+
+1. User logs in → gets JWT from backend.
+2. Stores JWT in local storage.
+3. Axios automatically attaches JWT for future requests.
+4. Server verifies JWT and returns protected data.
 
 
 
